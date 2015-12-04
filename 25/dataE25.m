@@ -1,14 +1,16 @@
 a = 9;
 b = 4;
-c = 0;
+c = 0.01;
 
 EA = 10;
 l0 = sqrt(a*a + b*b + c*c);
+k = (EA/l0)*(a/l0)^2*0.9;
+k_spring = 0;
 alpha = a/l0;
 ep = [EA, 1];
-n1 = [0*b, 0*a, c];
+n1 = [0*b, 0*a, 0];
 n2 = [b, a, c];
-n3 = [2*b, a*0, c];
+n3 = [2*b, a*0, 0];
 coord = [n1; n2; n3];
 coord = coord';
 coord0 = coord;
@@ -24,7 +26,7 @@ top_dof = 5;
 bc = [1 0;
     2 0;
     3 0;
-    6 0; %Den kan inte påverkas i z-led i nuläget, får inte räkna med z.
+    6 0;
     7 0;
     8 0;
     9 0];
@@ -36,12 +38,14 @@ bc = [1 0;
 
 p1 = 2*alpha^3/(3*sqrt(3));
 fmax = p1 * EA;
+fmax = fmax*5
 
-nbr_steps = 50;
+nbr_steps = 1000;
 
 f0 = zeros(ndof, 1);
 df = f0;
 a = f0;
+%a(top_dof+1)= c;
 
 df(top_dof) = -fmax/nbr_steps;
 
