@@ -1,3 +1,5 @@
+spring_dof = top_dof+1;
+
 dataE25
 
 f_n = f0;
@@ -6,15 +8,17 @@ K = zeros(ndof, ndof);
 
 TOL = 1e-4;
 
-k_spring = 0;
+%k_spring = 0;
 plot_f = zeros(nbr_steps,1);
 plot_u = zeros(nbr_steps,2);
 
 
-spring_dof = top_dof;
-spring_vector = zeros(ndof,1);
-spring_vector(spring_dof) = 1;
 
+
+if (spring_dof == 6)
+    k_spring = 0.3;
+end
+    
 for n = [1: nbr_steps]
     f_l = f_l + df;
     f_n = f_l;
@@ -37,7 +41,7 @@ for n = [1: nbr_steps]
             K(edof, edof) = K(edof, edof) + Ke;
             fint(edof) = fint(edof) + fe;
         end
-        K(top_dof, top_dof) = K(top_dof, top_dof) + k_spring;
+        K(spring_dof, spring_dof) = K(spring_dof, spring_dof) + k_spring;
         f_n(spring_dof) = f_l(spring_dof) - k_spring*a(spring_dof);
         r = f_n - fint;
         da = solveq(K, r, bc);
@@ -60,10 +64,16 @@ end
 
 [Ex,Ey,Ez]=coordxtr(Edof,coord,node_dof((1:nnod)'),2);
 %eldraw3(Ex,Ey,Ez,[1 4 1]);
-
-plot(plot_u(:,1), plot_f);
-%plot3(plot_u(:,1), plot_u(:,2), (plot_f))
+if spring_dof == top_dof+1
+    plot3(plot_u(:,1), plot_u(:,2), (plot_f))
+    xlabel('förskjutning (Y) / meter')
+    ylabel('förskjutning (Z) / meter')
+    zlabel('kraft / Newton')
+else
+    plot(plot_u(:,1), plot_f);
+    xlabel('förskjutning (Y) / meter')
+    ylabel('kraft / Newton')
+    
+end
 %plot3(plot_u(:,1), plot_u(:,1), (plot_f))
-xlabel('förskjutning (Y) / meter')
-ylabel('förskjutning (Z) / meter')
-zlabel('kraft / Newton')
+
