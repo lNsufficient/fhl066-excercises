@@ -1,4 +1,4 @@
-function [x, y] = findxy(ec, ed)
+function [x, y] = findxy_def(ec, ed)
 %FINDXY return x and y coordinates
 %   ec - undeformed configuration [xrow; yrow]
 %   ed - förskjutningar - a1 - x nod 1, a2 y nod 1, osv

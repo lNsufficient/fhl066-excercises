@@ -5,10 +5,10 @@ function ef = plan3gf(ec,t,ed,es)
 %   es - S vector S11, S22, S33
 %   t - thickness
 %   ef - [f1, f2, ...,f6]
-[x, y] = findxy(ec, ed)
+[x, y] = findxy0(ec);
 vInt = calcArea(x, y)*t; 
 [B0, Au, H]= getB(ec, ed);
-B = B0 + 1/2*Au*H;
+B = B0 + Au*H;
 ef = B'*es*vInt; % B, es constant for the whole integral
 
 

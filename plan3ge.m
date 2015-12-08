@@ -7,11 +7,11 @@ function Ke = plan3ge(ec,t,D,ed,es)
 %   t - thickness
 %   D - material properties
 [B0, Au, H] = getB(ec, ed);
-volIntegral = volumeInte(ec, ed, t);
+volIntegral0 = volumeInte(ec, zeros(numel(ec), 1), t);
 S = [es(1), es(3); es(3), es(2)];
 R = [S, zeros(size(S)); zeros(size(S)), S];
 B = B0 + Au*H;
-Ke = volIntegral*(B'*D*B + H'*R*H);
+Ke = volIntegral0*(B'*D*B + H'*R*H);
 
 
 

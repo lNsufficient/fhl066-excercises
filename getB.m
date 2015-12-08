@@ -6,12 +6,12 @@ function [B0, Au, H] = getB(ec, ed)
 evenIndex = (2:2:6);
 oddIndex = (1:2:5);
 
-[x, y] = findxy(ec, ed);
+%[x_def, y_def] = findxy_def(ec, ed);
+[x0, y0] = findxy0(ec);
+A = calcArea(x0, y0);
 
-A = calcArea(x, y);
-
-dNdx = 1/(2*A)*[y(2)-y(3), y(3)-y(1), y(1)-y(2)];
-dNdy = 1/(2*A)*[x(3)-x(2), x(1)-x(3), x(2)-x(1)];
+dNdx = 1/(2*A)*[y0(2)-y0(3), y0(3)-y0(1), y0(1)-y0(2)];
+dNdy = 1/(2*A)*[x0(3)-x0(2), x0(1)-x0(3), x0(2)-x0(1)];
 
 B0 = zeros(3, 6);
 B0([1;3], oddIndex) = [dNdx;dNdy];
