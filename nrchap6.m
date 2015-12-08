@@ -1,10 +1,15 @@
 data
 K0 = zeros(ndof, ndof);
 f0 = zeros(ndof, 1);
+an = zeros(ndof, 1);
+fn = f0;
+df = f0;
+df()
+
 for n=(1:n_end)
     fn = fn + df;
     a = an;
-    S = Sn;
+    %S = Sn;
     G = TOL + 1;
     while(norm(G) < TOL)
         K = K0;
@@ -28,5 +33,5 @@ for n=(1:n_end)
         G = fint - fn;
     end
     an = a;
-    Sn = S;
+    %Sn = S;
 end
