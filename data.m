@@ -6,5 +6,8 @@ load('geom7e1.mat')
 
 
 E = ones(3,1)*210e9; %Är detta verkligen isotropiskt material?
-
-eldraw2(ex,ey,[1 3 1]);
+t = 1;
+v = 0.3;
+D = getD(E, v);
+ndof = max(max(edof));
+%eldraw2(ex,ey,[1 3 1]);
