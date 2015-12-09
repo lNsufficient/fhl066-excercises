@@ -14,19 +14,20 @@ plot_f = zeros(nbr_steps,1);
 plot_u = zeros(nbr_steps,3);
 
 
-k_spring = 0;
-
-use_hookes = 0;
 
 
 if (spring_dof == 6)
     k_spring = 0.3;
 end
-    
+
+k_spring = 0;
+eps_n = 0;
+eps_spring = 0;
+
 for n = [1: nbr_steps]
     f_l = f_l + df;
     f_n = f_l;
-    %u_n = u_n;
+    du_n = 0*a;
 
     r = TOL*norm(f_n) + 1;
     while(norm(r) > TOL*norm(f_l))
@@ -36,45 +37,31 @@ for n = [1: nbr_steps]
         for i = [1:nelm]
             edof = Edof(i, :);
             edof = edof(2:end);
-            ec = coord0(edof);
+            ec = coord(edof);
             ec = [ec(1:3)', ec(4:6)'];
-            ed = a(edof);
-            if use_hookes           
-                [es, ~] = bar3gs(ec, ep, ed);
-                Ke = bar3ge(ec,ep,ed,es);
-                fe = bar3gf(ec, ed, es);
-            else
-                %[es, ee] = bar3gs_log1(ec, ep, ed)
-                [es, ee] = bar3gs_log(ec, ep, ed)
-                %Ke = bar3ge_log1(ec,ep,ed,es,ee)
-                Ke = bar3ge_log(ec,ep,ed,ee)
-                fe = bar3gf(ec, ed, es)
-            end
+            ed = du_n(edof);
+            [es, eps_n] = bar3gs_updated(ec, ep, ed, eps_n);
+            Ke = bar3ge_updated(ec,ep,ed,es);
+            fe = bar3gf(ec, ed, es);
             K(edof, edof) = K(edof, edof) + Ke;
             fint(edof) = fint(edof) + fe;
         end
         if spring_dof ~= -1
             K(spring_dof, spring_dof) = K(spring_dof, spring_dof) + k_spring;
-            f_n(spring_dof) = f_l(spring_dof) - k_spring*a(spring_dof);
+            eps_spring = k_spring*du_n(spring_dof) + eps_spring;
+            f_n(spring_dof) = f_l(spring_dof) - eps_spring;
         end
-        r = f_n - fint;
-        da = solveq(K, r, bc);
-        K
+        r = f_n - fint
+        da = solveq(K, r, bc)
         r(bc(:,1)) = 0;
-        a = a + da;
+        du_n = du_n + da;
         
-        %for k=1:3
-        %    coord(:,k) = coord0(:,k)+a(k:3:(end+k-3)); %Detta är NOG fel, men blir rätt för nod 5.
-        %end
+        coord(:) = coord(:) + du_n(:);
+        
     end
+    a = a + du_n;
     plot_f(n) = f_n(top_dof);
     plot_u(n,:) = a([top_dof-1, top_dof, top_dof+1]);
-end
-
-coord0 = coord0';
-coord = coord0 * 0;
-for j=1:3
-            coord(:,j) = coord0(:,j)+a(j:3:(end+j-3));
 end
 
 [Ex,Ey,Ez]=coordxtr(Edof,coord,node_dof((1:nnod)'),2);

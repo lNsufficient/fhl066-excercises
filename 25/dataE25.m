@@ -1,5 +1,9 @@
 a = 9;
 b = 4;
+delta = 1;
+if (spring_dof == -1)
+    delta = 1.01;
+end
 c = 0;
 if (spring_dof == top_dof +1)
     c = 0.01;
@@ -13,7 +17,7 @@ k_spring = k*1.1;
 alpha = a/l0;
 ep = [EA, 1];
 n1 = [0*b, 0*a, 0];
-n2 = [b, a, c];
+n2 = [b*delta, a, c];
 n3 = [2*b, a*0, 0];
 %n_spring = n2;
 coord = [n1; n2; n3];
@@ -49,7 +53,7 @@ nbr_steps = 100;
 
 f0 = zeros(ndof, 1);
 df = f0;
-a = f0;
+a = f0*0;
 %a(top_dof+1)= c;
 
 df(top_dof) = -fmax/nbr_steps;
