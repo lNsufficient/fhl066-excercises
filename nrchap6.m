@@ -27,7 +27,9 @@ for n=(1:n_end)
             fe = plan3gf(ec, t, ed, es);
             fint(edof) = fint(edof) + fe;
         end
-        G(right_side) == 0;
+        G = fint; % fint-0, fext = 0.
+        G(right_side) = 0; %vi räknr med att den blir bra
+        %sätt bc till att vara noll varje varv.
         da = K\(-G);
         a = a + da;
         %fint
