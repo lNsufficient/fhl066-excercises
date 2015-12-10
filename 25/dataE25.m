@@ -47,7 +47,7 @@ end
 
 p1 = 2*alpha^3/(3*sqrt(3));
 fmax = p1 * EA;
-fmax = fmax*10;
+fmax = fmax*30;
 
 nbr_steps = 100;
 

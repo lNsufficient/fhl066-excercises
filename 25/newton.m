@@ -10,15 +10,16 @@ K = zeros(ndof, ndof);
 TOL = 1e-4;
 
 %k_spring = 0;
+k_spring = k_spring*4
 plot_f = zeros(nbr_steps,1);
 plot_u = zeros(nbr_steps,3);
 
 
-k_spring = 0;
+%k_spring = 0;
 
 use_hookes = 0;
 
-
+coordprint = zeros(size(coord0))
 if (spring_dof == 6)
     k_spring = 0.3;
 end
@@ -53,13 +54,19 @@ for n = [1: nbr_steps]
             K(edof, edof) = K(edof, edof) + Ke;
             fint(edof) = fint(edof) + fe;
         end
-        if spring_dof ~= -1
+        
+        if spring_dof == 6
+            K(spring_dof, spring_dof) = K(spring_dof, spring_dof) + k_spring/10;
+            f_n(spring_dof) = f_l(spring_dof) - k_spring/10*a(spring_dof);
+            
+            K(top_dof, top_dof) = K(top_dof, top_dof) + k_spring;
+            f_n(top_dof) = f_l(top_dof) - k_spring*a(top_dof);
+        elseif spring_dof ~= -1
             K(spring_dof, spring_dof) = K(spring_dof, spring_dof) + k_spring;
             f_n(spring_dof) = f_l(spring_dof) - k_spring*a(spring_dof);
         end
         r = f_n - fint;
         da = solveq(K, r, bc);
-        K
         r(bc(:,1)) = 0;
         a = a + da;
         
@@ -69,6 +76,11 @@ for n = [1: nbr_steps]
     end
     plot_f(n) = f_n(top_dof);
     plot_u(n,:) = a([top_dof-1, top_dof, top_dof+1]);
+    
+    coordprint(:) = coord0(:) + a(:);
+    [Ex,Ey,Ez]=coordxtr(Edof,coordprint',node_dof((1:nnod)'),2);
+    %eldraw3(Ex,Ey,Ez,[1 4 1]);
+    %pause;
 end
 
 coord0 = coord0';

@@ -6,7 +6,7 @@ function [ee, eff]  = plan3gs(ec,ed)
 %   ed - förskjutningar - a1 - x nod 1, a2 y nod 1, osv
 [B0, Au, H] = getB(ec, ed);
 eff = H * ed;
-ee = (B0 + Au*H)*ed;  
+ee = (B0 + 1/2*Au*H)*ed;  
      
 end
 

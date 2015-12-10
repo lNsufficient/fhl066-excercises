@@ -27,6 +27,7 @@ for n=(1:n_end)
             fe = plan3gf(ec, t, ed, es);
             fint(edof) = fint(edof) + fe;
         end
+        G(right_side) == 0;
         da = K\(-G);
         a = a + da;
         %fint
