@@ -16,6 +16,7 @@ for n=(1:n_end)
     G = TOL + 1;
     j = 0;
     while(norm(G) > TOL && j < max_itr)
+        a(right_side,2) = bcn(right_side,2);
         j = j + 1;
         K = K0;
         fint = f0;
@@ -32,8 +33,10 @@ for n=(1:n_end)
             fe = plan3gf(ec, t, ed, es);
             fint(dof) = fint(dof) + fe;
         end
-        G = fint - fn;
-        da = solveq(K, -G, bc);
+        fext = f0;
+        fext(right_side) = fint(right_side);
+        G = fext - fint;
+        da = solveq(K, G, bc);
         a = a + da;
         %fint
         

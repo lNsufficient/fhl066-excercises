@@ -14,8 +14,8 @@ nelm = length(edof);
 df = zeros(ndof, 1);
 
 
-f_max = 20;
-n_end = 200;
+
+n_end = 10;
 right_side = find(bc(:,2)> 0);
 bc(right_side, 2) = 0; 
 
