@@ -18,6 +18,9 @@ df = zeros(ndof, 1);
 n_end = 10;
 right_side = find(bc(:,2)> 0);
 bc(right_side, 2) = 0; 
+db = 10/n_end;
+dbc = ones(length(right_side), 1)*db;
+
 
 
 %eldraw2(ex,ey,[1 3 1]);
