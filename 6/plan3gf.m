@@ -6,7 +6,8 @@ function ef = plan3gf(ec,t,ed,es)
 %   t - thickness
 %   ef - [f1, f2, ...,f6]
 [x, y] = findxy0(ec);
-vInt = calcArea(x, y)*t; 
+vInt = volumeInte(ec, zeros(numel(ec),1), t); 
+
 [B0, Au, H]= getB(ec, ed);
 B = B0 + Au*H;
 ef = B'*es*vInt; % B, es constant for the whole integral

@@ -1,2 +1,7 @@
-# fhl066-excercises
-Excercises of Edvard Johansson for fhl066
+Working:
+
+plan3ge
+plan3gf
+plan3gs
+getB
+volumeInte

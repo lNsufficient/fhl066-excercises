@@ -5,20 +5,24 @@ load('geom7e1.mat')
 %dof: yn vector place 2n
 
 
-E = 210e9; %Är detta verkligen isotropiskt material?
+E = 210e3; %Är detta verkligen isotropiskt material?
 t = 1;
 v = 0.3;
 D = getD(E, v);
+D = hooke(2, E, v);
+D = D([1 2 4], [1 2 4])
 ndof = max(max(edof));
 nelm = length(edof);
 df = zeros(ndof, 1);
 
 
 
-n_end = 10;
+n_end = 70;
 right_side = find(bc(:,2)> 0);
 bc(right_side, 2) = 0; 
-db = 10/n_end;
+right_side_nodes = bc(right_side, 1);
+bcMax = 10;
+db = bcMax/n_end;
 dbc = ones(length(right_side), 1)*db;
 
 

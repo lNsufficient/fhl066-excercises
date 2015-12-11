@@ -2,26 +2,25 @@ data
 K0 = zeros(ndof, ndof);
 f0 = zeros(ndof, 1);
 an = zeros(ndof, 1);
-fn = f0;
+
 bcn = bc;
 bcn(right_side, 2) = 0;
 maxItr = 10;
-TOL = 1e-3;
+TOL = 1e-6;
 
+gplot = [];
 for n=(1:n_end)
-
+    disp('==========')
     a = an;
     %S = Sn;
     G = TOL + 1;
-    bcn(right_side, 2) = dbc*n;
-    size(bcn)
-    a(right_side) = bcn(right_side, 2);
-    size(a)
+    bcn(right_side, 2) = dbc;
+    %a(right_side_nodes) = bcn(right_side, 2);
     j = 0;
     while(norm(G) > TOL && j < maxItr)
         j = j+1;
-        K = K0;
-        fint = f0;
+        K = K0*0;
+        fint = f0*0;
         for i = (1:nelm)
             tmpedof = edof(i, 2:end);
             ed = a(tmpedof);
@@ -33,20 +32,20 @@ for n=(1:n_end)
             
             fe = plan3gf(ec, t, ed, es);
             fint(tmpedof) = fint(tmpedof) + fe;
-            max(abs(fe))
-            pause;
+            %disp(max(abs(fe)))
             
         end
+        
         G = -fint; % fint-0, fext = 0.
-
-        G(right_side) = 0; %vi rï¿½knr med att den blir bra
+        G(bcn(:,1)) = 0; %vi rï¿½knr med att den blir bra
         %sï¿½tt bc till att vara noll varje varv.
-        da = solveq(K, G, bc);
+        da = solveq(K, G, bcn);
         a = a + da;
         %fint
         
-        G(bc(:,1)) = 0;
-        bc(right_side, 2) = dbc*0;
+        G(bcn(:,1)) = 0;
+        gplot = [gplot; (norm(G))];
+        bcn(right_side, 2) = dbc*0; %för att da inte ska bli för stor
     end
     if j == maxItr
         disp('reached maxitr')
@@ -55,7 +54,11 @@ for n=(1:n_end)
     an = a;
     %Sn = S;
 end
+semilogy(gplot)
 
-plotpar= [1 1 2];
-Ed = extract(tmpedof, a);
-eldisp2(ex, ey, Ed, plotpar);
+plotpar= [1 4 2];
+Ed = extract(edof, a);
+eldisp2(ex, ey, Ed, plotpar, 1);
+hold on;
+plotpar= [1 3 2];
+eldraw2(ex, ey, plotpar, edof(:,1))
