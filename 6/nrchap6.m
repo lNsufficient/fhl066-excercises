@@ -14,25 +14,31 @@ for n=(1:n_end)
     %S = Sn;
     G = TOL + 1;
     bcn(right_side, 2) = dbc*n;
+    size(bcn)
+    a(right_side) = bcn(right_side, 2);
+    size(a)
     j = 0;
     while(norm(G) > TOL && j < maxItr)
         j = j+1;
         K = K0;
         fint = f0;
         for i = (1:nelm)
-            edof = edof(i, 2:end);
-            ed = a(edof);
-            ec = [ex(k,:); ey(k,:)];
+            tmpedof = edof(i, 2:end);
+            ed = a(tmpedof);
+            ec = [ex(i,:); ey(i,:)];
             [ee, ~] = plan3gs(ec, ed);
             es = D*ee;
             Ke = plan3ge(ec, t, D, ed, es);
-            K(edof, edof) = K(edof, edof) + Ke;
-            
+            K(tmpedof, tmpedof) = K(tmpedof, tmpedof) + Ke;
             
             fe = plan3gf(ec, t, ed, es);
-            fint(edof) = fint(edof) + fe;
+            fint(tmpedof) = fint(tmpedof) + fe;
+            max(abs(fe))
+            pause;
+            
         end
-        G = fint; % fint-0, fext = 0.
+        G = -fint; % fint-0, fext = 0.
+
         G(right_side) = 0; %vi r�knr med att den blir bra
         %s�tt bc till att vara noll varje varv.
         da = solveq(K, G, bc);
@@ -42,6 +48,14 @@ for n=(1:n_end)
         G(bc(:,1)) = 0;
         bc(right_side, 2) = dbc*0;
     end
+    if j == maxItr
+        disp('reached maxitr')
+    end
+
     an = a;
     %Sn = S;
 end
+
+plotpar= [1 1 2];
+Ed = extract(tmpedof, a);
+eldisp2(ex, ey, Ed, plotpar);
