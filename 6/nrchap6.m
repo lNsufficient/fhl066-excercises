@@ -8,8 +8,13 @@ bcn(right_side, 2) = 0;
 maxItr = 10;
 TOL = 1e-6;
 
+fplot = zeros(n_end, numel(right_side));
+uplot = fplot*0;
 gplot = [];
 for n=(1:n_end)
+    if mod(n, 2)
+        disp(n)
+    end
     disp('==========')
     a = an;
     %S = Sn;
@@ -17,7 +22,7 @@ for n=(1:n_end)
     bcn(right_side, 2) = dbc;
     %a(right_side_nodes) = bcn(right_side, 2);
     j = 0;
-    while(norm(G) > TOL && j < maxItr)
+    while(norm(G) > TOL && j < maxItr || j < 2)
         j = j+1;
         K = K0*0;
         fint = f0*0;
@@ -47,6 +52,8 @@ for n=(1:n_end)
         gplot = [gplot; (norm(G))];
         bcn(right_side, 2) = dbc*0; %för att da inte ska bli för stor
     end
+    fplot(n,:) = fint(right_side_nodes);
+    uplot(n,:) = a(right_side_nodes);
     if j == maxItr
         disp('reached maxitr')
     end
@@ -55,7 +62,10 @@ for n=(1:n_end)
     %Sn = S;
 end
 semilogy(gplot)
-
+pause;
+plot(uplot, fplot)
+pause;
+clf
 plotpar= [1 4 2];
 Ed = extract(edof, a);
 eldisp2(ex, ey, Ed, plotpar, 1);
