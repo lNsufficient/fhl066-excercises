@@ -71,4 +71,4 @@ Ed = extract(edof, a);
 eldisp2(ex, ey, Ed, plotpar, 1);
 hold on;
 plotpar= [1 3 2];
-eldraw2(ex, ey, plotpar, edof(:,1))
+eldraw2(ex, ey, plotpar)
