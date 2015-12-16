@@ -11,6 +11,7 @@ TOL = 1e-6;
 fplot = zeros(n_end, numel(right_side));
 uplot = fplot*0;
 gplot = [];
+n_end = n_end*2;
 for n=(1:n_end)
     if mod(n, 2)
         disp(n)
