@@ -1,4 +1,4 @@
-nodes
+data
 K0 = zeros(ndof, ndof);
 f0 = zeros(ndof, 1);
 an = zeros(ndof, 1);
@@ -30,8 +30,9 @@ for n=(1:n_end)
             tmpedof = edof(i, 2:end);
             ed = a(tmpedof);
             ec = [ex(i,:); ey(i,:)];
-            [ee, ~] = plan3gs(ec, ed);
-            es = D*ee;
+            [ee, eff] = plan3gs(ec, ed);
+            D = 
+            es =
             Ke = plan3ge(ec, t, D, ed, es);
             K(tmpedof, tmpedof) = K(tmpedof, tmpedof) + Ke;
             

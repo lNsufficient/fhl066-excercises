@@ -1,5 +1,6 @@
 function S = stresscal(F,mp)
 %ber√§knar 2 PK-sp√§nningen S enligt nyhooksk modell
+% F ‰r def.gradient pÂ matrisform
 % S = [S_xx, S_yy, S_xy]' = stresscal(F,mp)
 % mp = [E,nu]
 E=mp(1);    nu=mp(2);
