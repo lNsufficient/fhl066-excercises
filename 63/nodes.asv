@@ -15,7 +15,7 @@ ey = [node(edof_nodes(1,2:end), 2)'; node(edof_nodes(2,2:end),2)'];
 
 bc0 = [1 2 3 4 5 7];
 bc = [bc0' bc0'*0];
-dbc = -0.00004;
+
 
 E = 210e9; %Är detta verkligen isotropiskt material?
 t = 1;
@@ -24,10 +24,6 @@ D = hooke(2, E, v);
 D = D([1 2 4], [1 2 4]);
 ndof = max(max(edof));
 nelm = 2;
-
-bcMax = 0.001*3;
-
-n_end = floor(abs(bcMax/dbc));
 
 
 right_side = [3 5];
