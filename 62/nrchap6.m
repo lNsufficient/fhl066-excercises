@@ -31,8 +31,9 @@ for n=(1:n_end)
             ed = a(tmpedof);
             ec = [ex(i,:); ey(i,:)];
             [ee, eff] = plan3gs(ec, ed);
-            D = 
-            es =
+            F = F_vect2tens(eff);
+            D = mstiff(F,mp);
+            es = stresscal(F,mp);
             Ke = plan3ge(ec, t, D, ed, es);
             K(tmpedof, tmpedof) = K(tmpedof, tmpedof) + Ke;
             

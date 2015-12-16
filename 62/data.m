@@ -4,13 +4,17 @@ load('geom7e1.mat')
 %dof: xn vector place 2n-1
 %dof: yn vector place 2n
 
+mm = 1e-3;
+E = 210e3/(mm^2); %Är detta verkligen isotropiskt material?
+ex = ex*mm;
+ey = ey*mm;
 
-E = 210e9; %Är detta verkligen isotropiskt material?
-ex = ex/1e3;
-ey = ey/1e3;
+%E = 210e3;
 
-t = 1;
+t = 1*mm;
 v = 0.3;
+
+mp = [E, v];
 
 
 ndof = max(max(edof));
@@ -23,7 +27,8 @@ n_end = 70;
 right_side = find(bc(:,2)> 0);
 bc(right_side, 2) = 0; 
 right_side_nodes = bc(right_side, 1);
-bcMax = 10;
+bcMax = 10*mm;
+%bcMax = 10;
 db = bcMax/n_end;
 dbc = ones(length(right_side), 1)*db;
 
