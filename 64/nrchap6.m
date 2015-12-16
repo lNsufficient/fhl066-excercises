@@ -11,6 +11,11 @@ TOL = 1e-6;
 fplot = zeros(n_end, numel(right_side));
 uplot = fplot*0;
 gplot = [];
+gauss_points;
+
+D={1,4};
+es={1,4};
+
 for n=(1:n_end)
     if mod(n, 2)
         disp(n)
@@ -28,15 +33,18 @@ for n=(1:n_end)
         fint = f0*0;
         for i = (1:nelm)
             tmpedof = edof(i, 2:end);
-            ed = a(tmpedof);
+            ed = a(tmpedof)';
             ec = [ex(i,:); ey(i,:)];
-            [ee, eff] = plan3gs(ec, ed);
-            D = 
-            es =
-            Ke = plan3ge(ec, t, D, ed, es);
+            [ee, eff] = plan4gis(ec,ed);
+            for k=1:4
+                F = F_vect2tens(eff{k});
+                D{k} = mstiff(F,mp);
+                es{k} = stresscal(F,mp);
+            end
+            Ke = plan4gie(ec,t,D,ed,es);
             K(tmpedof, tmpedof) = K(tmpedof, tmpedof) + Ke;
             
-            fe = plan3gf(ec, t, ed, es);
+            fe = plan4gif(ec,t,ed,es)'; %är det radvektor?
             fint(tmpedof) = fint(tmpedof) + fe;
             %disp(max(abs(fe)))
             

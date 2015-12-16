@@ -23,6 +23,9 @@ for i=1:4   %varje i motsvarar en gausspunkt
     D_point = D{i};
     
     s=es{i};
+    if numel(s)==1
+        keyboard
+    end
     S = [s(1), s(3); s(3), s(2)];
     
     R=[S, eye(2); eye(2), S];
