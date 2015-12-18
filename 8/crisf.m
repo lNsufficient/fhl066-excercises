@@ -5,16 +5,18 @@ perturb_switch = 0;
 
 data_e8 %denna kör automatiskt data.m
 
-plot_a = [];
+n_end=400;
+plot_a = zeros(n_end, 2);
 plot_f = [];
 
 lambda=0;
 maxItr = 100;
 
 if perturb_switch == 2
-    P(top_dof) = P_end*cosd(12);
-    P(top_dof-1) = P_end*sind(12);
+    top_dof = find(P)
+    P(top_dof-1) = P_end*1e-2;
 end
+P
 G = P*0;
 f_int=P*0;
 a = P*0;
@@ -22,11 +24,11 @@ K = zeros(ndof, ndof);
 
 %TOL=norm(P_end/nbr_steps)*1e-2;
 SCALE=1;
-l=24e0;
+l=5e0;
 l_0=l;
 TOL = 1e-2;
 
-n_end=400;
+
 
 psy=0; %given in task
 
@@ -99,7 +101,7 @@ while n < n_end
             a_i = old_a;
             
             l = l/2;
-            continue;
+            break;
         else
             d_lambda = d_lambda_test;
             l = min(l*2,l_0);
@@ -157,7 +159,7 @@ while n < n_end
     lambda=lambda_i;
    
     plot_f(n) = lambda*P_end;
-    plot_a(n) = a(top_dof);
+    plot_a(n,:) = [a(top_dof)'];
     
     if mod(n,500)==0
         plot(plot_a, plot_f)
@@ -171,7 +173,7 @@ while n < n_end
         subplot(2,1,1);
         eldisp2(ex, ey, Ed, plotpar, 1);
         subplot(2,1,2);
-        plot(plot_a, plot_f)
+        plot(plot_a(1:n,1), plot_f)
         pause;
     end
     
@@ -194,6 +196,11 @@ A(:,perturb_switch+1) = plot_a;
 F(:,perturb_switch+1) = plot_f;
 hold off;
 clf;
+%%
+    plot3(plot_a(:,1), plot_1(:,2), (plot_f))
+    xlabel('förskjutning (y) / meter')
+    ylabel('förskjutning (x) / meter')
+    zlabel('kraft / Newton')
 %%
 clf;
 plotpar= [1 4 3]; 
