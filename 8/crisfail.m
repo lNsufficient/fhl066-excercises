@@ -3,13 +3,13 @@ perturb_switch = 0;
 %0. ingen st?rn
 %2. st?rn i lasten
 
-data_e8 %denna kör automatiskt data.m
+data_e8fail %denna kör automatiskt data.m
 
 plot_a = [];
 plot_f = [];
 
 lambda=0;
-maxItr = 3;
+maxItr = 100;
 
 if perturb_switch == 2
     P(top_dof) = P_end*cosd(12);
@@ -24,7 +24,7 @@ K = zeros(ndof, ndof);
 SCALE=1;
 l=1e-2*mm/SCALE;
 l_0=l;
-TOL = 1e-2*l
+TOL = l*1e-2
 
 
 n_end=300*10;
@@ -48,7 +48,7 @@ while n < n_end
     lambda_i = lambda;
  
     res = TOL+1;
-    i = 0;
+    i = 1;
     G=G*0; %kanske flytta ut denna?
     
     while (res > TOL) %This could cause a problem, res = 0 first itr?

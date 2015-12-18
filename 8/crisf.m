@@ -3,7 +3,7 @@ perturb_switch = 0;
 %0. ingen st?rn
 %2. st?rn i lasten
 
-data_e82 %denna kör automatiskt data.m
+data_e8 %denna kör automatiskt data.m
 
 plot_a = [];
 plot_f = [];
