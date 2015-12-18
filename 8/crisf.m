@@ -22,11 +22,11 @@ K = zeros(ndof, ndof);
 
 %TOL=norm(P_end/nbr_steps)*1e-2;
 SCALE=1;
-l=1e-2
+l=24e0;
 l_0=l;
-TOL = l*1e-2;
+TOL = 1e-2;
 
-n_end=300*10;
+n_end=400;
 
 psy=0; %given in task
 
@@ -37,7 +37,7 @@ top_dof=find(P);
 old_a = a; 
 
 USE_HOOKE = 0;
-continuous_plot = 0;
+continuous_plot = 1;
 
 plot_res=[];
 
@@ -66,8 +66,8 @@ while n < n_end
             Ke = plan3ge(ec,t,D,ed,es);
             K(index_dof,index_dof)=K(index_dof,index_dof)+Ke;
             
-            ef= plan3gf(ec, t, ed, es);
-            f_int(index_dof) = f_int(index_dof) + ef;
+            %ef= plan3gf(ec, t, ed, es);
+            %f_int(index_dof) = f_int(index_dof) + ef;
         end
         
         da_G = solveq(K,-G,bc);
@@ -96,6 +96,8 @@ while n < n_end
         end   
         if ~isreal(d_lambda_test)
             keyboard
+            a_i = old_a;
+            
             l = l/2;
             continue;
         else
@@ -106,6 +108,23 @@ while n < n_end
         lambda_i = lambda_i + d_lambda; 
         
         a_i = a_i + da_G + da_P*d_lambda;
+ 
+        for j = 1:nelm
+            index_dof=edof(j,2:end); %de frihg stången gränsar till
+            ec=[ex(j,:); ey(j,:)];
+            ed=a_i(index_dof);
+            [ee,eff]= plan3gs(ec,ed);
+            
+            F = F_vect2tens(eff);
+            D = mstiff(F,mp);
+            es = stresscal(F,mp);
+            
+            %Ke = plan3ge(ec,t,D,ed,es);
+            %K(index_dof,index_dof)=K(index_dof,index_dof)+Ke;
+            
+            ef= plan3gf(ec, t, ed, es);
+            f_int(index_dof) = f_int(index_dof) + ef;
+        end
         
         G=f_int-lambda_i*P;
         G(bc(:,1)) = 0;
@@ -132,7 +151,7 @@ while n < n_end
     
     
     if (n > 30 &&((lambda_i-lambda)/oldLambda > 2))
-        keyboard
+        %keyboard
     end
 
     lambda=lambda_i;
@@ -145,17 +164,18 @@ while n < n_end
         disp('========')
     end
     
-    if continuous_plot
-        for k=1:3
-                coord(:,k) = coord0(:,k)+a(k:3:(end+k-3));
-        end
-        [Ex,Ey,Ez]=coordxtr(Edof,coord,node_dof((1:nnod)'),2);
+    if (continuous_plot && ~mod(n, 100))
         clf;
-        eldraw3(Ex,Ey,Ez,[1 4 1]);
+        plotpar= [1 4 3]; 
+        Ed = extract(edof, a);
+        subplot(2,1,1);
+        eldisp2(ex, ey, Ed, plotpar, 1);
+        subplot(2,1,2);
+        plot(plot_a, plot_f)
         pause;
     end
     
-    [n,i]
+    [n,i-1]
     
 end
 
@@ -172,8 +192,10 @@ A = zeros(length(plot_a), 3);
 F = zeros(length(plot_f), 3);
 A(:,perturb_switch+1) = plot_a;
 F(:,perturb_switch+1) = plot_f;
+hold off;
 clf;
 %%
+clf;
 plotpar= [1 4 3]; 
 Ed = extract(edof, a);
 eldisp2(ex, ey, Ed, plotpar, 1);
