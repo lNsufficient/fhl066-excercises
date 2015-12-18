@@ -13,11 +13,11 @@ N3 = @(x,y) (er(1)*es(2)-er(2)*es(1)+(es(1)-es(2))*x+(er(2)-er(1))*y);%/(2*A);
     [xy,w] = dunavant_rule(2);
 %end
 Me=zeros(6);
-for i=1:3
+for i=1:3 % varje i motsvarar en g-punkt
     
-            f1=N1(xy(1,i),xy(2,i));
-            f2=N2(xy(1,i),xy(2,i));
-            f3=N3(xy(1,i),xy(2,i));
+    f1=N1(xy(1,i),xy(2,i));
+    f2=N2(xy(1,i),xy(2,i));
+    f3=N3(xy(1,i),xy(2,i));
     N=[f1,0,f2,0,f3,0;
         0,f1,0,f2,0,f3];
     Me=Me+N'*N*w(i);
