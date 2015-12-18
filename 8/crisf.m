@@ -22,7 +22,7 @@ K = zeros(ndof, ndof);
 
 %TOL=norm(P_end/nbr_steps)*1e-2;
 SCALE=1;
-l=1e-2*mm/SCALE;
+l=1e-2
 l_0=l;
 TOL = l*1e-2;
 
