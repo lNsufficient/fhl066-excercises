@@ -7,13 +7,13 @@ load('task1_mesh2')
 %dof: yn vector place 2n
 
 mm = 1e-3;
-E = 210e9*(mm^2); %Ã„r detta verkligen isotropiskt material?
+E = 210e3/(mm^2); %Är detta verkligen isotropiskt material?
 ex = ex*mm;
 ey = ey*mm;
 
 %E = 210e3;
 
-t = 1000*mm;
+t = 1*mm;
 v = 0.3;
 
 mp = [E, v];
