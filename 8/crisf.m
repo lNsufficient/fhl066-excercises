@@ -9,7 +9,7 @@ plot_a = [];
 plot_f = [];
 
 lambda=0;
-maxItr = 100;
+maxItr = 3;
 
 if perturb_switch == 2
     P(top_dof) = P_end*cosd(12);
@@ -24,7 +24,8 @@ K = zeros(ndof, ndof);
 SCALE=1;
 l=1e-2*mm/SCALE;
 l_0=l;
-TOL = l*1e-2;
+TOL = 1e-2*l
+
 
 n_end=300*10;
 
@@ -47,8 +48,9 @@ while n < n_end
     lambda_i = lambda;
  
     res = TOL+1;
-    i = 1;
-    G=G*0;
+    i = 0;
+    G=G*0; %kanske flytta ut denna?
+    
     while (res > TOL) %This could cause a problem, res = 0 first itr?
         K=K*0;
         f_int=f_int*0;
