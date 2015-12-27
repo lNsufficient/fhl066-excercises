@@ -5,7 +5,9 @@ alpha = 0;
 gamma = 1/2 + alpha;
 beta = 1/4*(1+alpha)^2;
 
-P_factor = 0.5;
+n_end = 100;
+P_end = 8000;
+P_factor = P_end/n_end;
 df = P*P_factor;
 f_np1 = df*0;
 force_dof = find(P);
@@ -48,7 +50,6 @@ up_n = a*0;
 u_n = a;
 
 n = 0;
-n_end = 40;
 h = 0.01;
 eps_r = 1e-5;
 eps_u = eps_r;
@@ -60,6 +61,12 @@ continuous_plot = 1;
 
 while(n < n_end)
     n = n+1;
+    
+    if (n > n_end/2)
+        df = 0*df;
+        f_np1 = 0*f_np1;
+    end
+        
     disp(n)
     disp('==========')
     %2 - prediction step
@@ -71,6 +78,7 @@ while(n < n_end)
     du_norm = eps_u + 3;
     f_np1 = f_np1 + df;
     i = 0;
+    
     while (res > eps_r || du_norm > eps_u)
         i = i +1;
         %disp('Residual: ')
@@ -135,8 +143,8 @@ while(n < n_end)
         subplot(2,1,1);
         eldisp2(ex, ey, Ed, plotpar, 1);
         subplot(2,1,2);
-        plot(plot_a(1:n,1), plot_f)
+        plot(plot_a(1:n,1), plot_f(1:n))
         pause;
     end
 end
-plot(plot_res)
+semilogy(plot_res)
