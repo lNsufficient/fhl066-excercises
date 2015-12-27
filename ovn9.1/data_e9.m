@@ -23,13 +23,4 @@ ndof = nrdof;
 nelm = nrelem;
 
 
-n_end = 70;
-% 
-P_factor = 1;
-% df = P_end/n_end;
-
-P = P*P_factor;
-
-P_end=-max(abs(P));
-
 %eldraw2(ex,ey,[1 3 1]);

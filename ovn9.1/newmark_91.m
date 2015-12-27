@@ -52,7 +52,7 @@ up_n = a*0;
 u_n = a;
 
 n = 0;
-h = 0.00001;
+h = 0.01;
 eps_r = 1e-5;
 eps_u = eps_r;
 
