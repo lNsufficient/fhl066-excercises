@@ -1,7 +1,8 @@
 function Me = plan3gm(ec,t,rho)
 ex=ec(1,:);
 ey=ec(2,:);
-A = triarea(ex,ey);
+[x_coord, y_coord] = findxy0(ec);
+A = calcArea(x_coord, y_coord);
 er=[0,1,0];
 es=[0,0,1];
 N1 = @(x,y) (er(2)*es(3)-er(3)*es(2)+(es(2)-es(3))*x+(er(3)-er(2))*y);%/(2*A);
