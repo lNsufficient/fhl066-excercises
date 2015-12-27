@@ -19,6 +19,8 @@ K = zeros(ndof,ndof);
 
 plot_res = [];
 
+modifier = 10; %modulus using modifier gives when to plot
+
 %i det h�r fallet �r g bara den interna kraften, ty C = 0.
 for j = 1:nelm
             index_dof=edof(j,2:end); %de frihg stången gränsar till
@@ -50,7 +52,7 @@ up_n = a*0;
 u_n = a;
 
 n = 0;
-h = 0.01;
+h = 0.00001;
 eps_r = 1e-5;
 eps_u = eps_r;
 
@@ -58,13 +60,14 @@ eps_u = eps_r;
 plot_a = zeros(n_end,1);
 plot_f = zeros(n_end,1);
 continuous_plot = 1;
-
+n_release = 10;
 while(n < n_end)
     n = n+1;
     
-    if (n > n_end/2)
+    if (n > n_end - n_release)
         df = 0*df;
         f_np1 = 0*f_np1;
+        modifier = 1;
     end
         
     disp(n)
@@ -106,6 +109,7 @@ while(n < n_end)
             f_int(index_dof) = f_int(index_dof) + ef;
         end 
         g_np1 = f_int;
+        disp(norm(M*upp_np1))
         r = f_np1 - M*upp_np1- g_np1;
         
         %4 - system matrices and increment correction
@@ -136,7 +140,7 @@ while(n < n_end)
     plot_a(n) = u_np1(force_dof);
     plot_f(n) = f_np1(force_dof);
     
-    if (continuous_plot && ~mod(n, 10))
+    if (continuous_plot && ~mod(n, modifier))
         clf;
         plotpar= [1 4 3]; 
         Ed = extract(edof, u_np1);
@@ -146,5 +150,8 @@ while(n < n_end)
         plot(plot_a(1:n,1), plot_f(1:n))
         pause;
     end
+    upp_n = upp_np1;
+    up_n = up_np1;
+    u_n = u_np1;
 end
 semilogy(plot_res)
