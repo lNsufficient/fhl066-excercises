@@ -8,6 +8,7 @@ beta = 1/4*(1+alpha)^2;
 P_factor = 0.5;
 df = P*P_factor;
 f_np1 = df*0;
+force_dof = find(P);
 
 f_int = zeros(ndof,1);
 M = zeros(ndof,ndof);
@@ -52,6 +53,11 @@ h = 0.01;
 eps_r = 1e-5;
 eps_u = eps_r;
 
+
+plot_a = zeros(n_end,1);
+plot_f = zeros(n_end,1);
+continuous_plot = 1;
+
 while(n < n_end)
     n = n+1;
     disp(n)
@@ -64,8 +70,9 @@ while(n < n_end)
     res = eps_r + 2;
     du_norm = eps_u + 3;
     f_np1 = f_np1 + df;
-    
+    i = 0;
     while (res > eps_r || du_norm > eps_u)
+        i = i +1;
         %disp('Residual: ')
         %disp(res)
         %3 - residual calculation
@@ -116,5 +123,20 @@ while(n < n_end)
     end
     disp('Residual')
     disp(res)
+    disp('i')
+    disp(i)
+    plot_a(n) = u_np1(force_dof);
+    plot_f(n) = f_np1(force_dof);
+    
+    if (continuous_plot && ~mod(n, 10))
+        clf;
+        plotpar= [1 4 3]; 
+        Ed = extract(edof, u_np1);
+        subplot(2,1,1);
+        eldisp2(ex, ey, Ed, plotpar, 1);
+        subplot(2,1,2);
+        plot(plot_a(1:n,1), plot_f)
+        pause;
+    end
 end
 plot(plot_res)
