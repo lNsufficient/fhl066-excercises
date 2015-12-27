@@ -66,8 +66,8 @@ while(n < n_end)
     f_np1 = f_np1 + df;
     
     while (res > eps_r || du_norm > eps_u)
-        disp('Residual: ')
-        disp(res)
+        %disp('Residual: ')
+        %disp(res)
         %3 - residual calculation
         
         %- beräkning av f-int till residualen.
@@ -91,7 +91,7 @@ while(n < n_end)
             f_int(index_dof) = f_int(index_dof) + ef;
         end 
         g_np1 = f_int;
-        r = f_np1 - M*upp_np1-g_np1;
+        r = f_np1 - M*upp_np1- g_np1;
         
         %4 - system matrices and increment correction
         K = K; %Visst borde detta vara precis stiffness matrix?
@@ -104,14 +104,17 @@ while(n < n_end)
         
         u_np1 = u_np1 + du;
         
-        disp('u_np1');
-        disp(norm(u_np1));    
+        %disp('u_np1');
+        %disp(norm(u_np1));    
         
         up_np1 = up_np1 + gamma/(beta*h)*du;
         upp_np1 = upp_np1 + 1/(beta*h^2)*du;
+        r(bc(:,1)) = 0;
         res = norm(r);
         du_norm = norm(du);
         plot_res = [plot_res; res];
     end
+    disp('Residual')
+    disp(res)
 end
 plot(plot_res)
